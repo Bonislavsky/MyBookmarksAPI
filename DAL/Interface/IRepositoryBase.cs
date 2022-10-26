@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace MyBookmarksAPI.DAL.Interface
 {
-    interface IRepositoryBase<T>
+    public interface IRepositoryBase<T>
     {
-        IQueryable<T> GetAll();
+        Task<IEnumerable<T>> GetAll();
         Task<T> GetById(long id);
         Task<T> Create(T entity);
         void Update(T entity);

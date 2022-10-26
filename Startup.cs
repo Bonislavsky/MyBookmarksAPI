@@ -9,6 +9,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using MyBookmarksAPI.DAL;
+using MyBookmarksAPI.DAL.Interface;
+using MyBookmarksAPI.DAL.Repository;
+using MyBookmarksAPI.Service;
+using MyBookmarksAPI.Service.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +39,10 @@ namespace MyBookmarksAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyBookmarksAPI", Version = "v1" });
             });
+
+            services.AddScoped<IUserService, UserService>();
+
+            services.AddScoped<IUserRepository, UserRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

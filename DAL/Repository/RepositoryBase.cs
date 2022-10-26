@@ -25,9 +25,9 @@ namespace MyBookmarksAPI.DAL.Repository
             return entity;
         }
 
-        public IQueryable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAll()
         {
-            return _dbContext.Set<T>();
+            return await _dbContext.Set<T>().ToListAsync();
         }
 
         public void Delete(T entity)

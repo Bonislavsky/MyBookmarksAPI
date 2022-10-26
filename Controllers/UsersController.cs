@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyBookmarksAPI.DAL;
 using MyBookmarksAPI.Domain.Model;
+using MyBookmarksAPI.Service.Interface;
 
 namespace MyBookmarksAPI.Controllers
 {
@@ -15,10 +16,12 @@ namespace MyBookmarksAPI.Controllers
     public class UsersController : ControllerBase
     {
         private readonly MyBookmarksDbContext _context;
+        private readonly IUserService _userService;
 
-        public UsersController(MyBookmarksDbContext context)
+        public UsersController(MyBookmarksDbContext context, IUserService userService)
         {
             _context = context;
+            _userService = userService;
         }
 
         // GET: api/Users

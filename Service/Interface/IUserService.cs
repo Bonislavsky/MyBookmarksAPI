@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MyBookmarksAPI.DAL.Interface
+namespace MyBookmarksAPI.Service.Interface
 {
-    public interface IUserRepository : IRepositoryBase<User>
+    public interface IUserService : IServiceBase<User>
     {
+
     }
 }
