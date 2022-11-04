@@ -1,4 +1,5 @@
 ﻿using MyBookmarksAPI.Domain.Model;
+using MyBookmarksAPI.Domain.TDOModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,6 @@ namespace MyBookmarksAPI.Service.Interface
 {
     public interface IUserService : IServiceBase<User>
     {
-
+        Task<User> Create(UserCreateTDO entity);
     }
 }

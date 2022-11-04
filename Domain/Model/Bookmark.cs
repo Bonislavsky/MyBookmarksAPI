@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace MyBookmarksAPI.Domain.Model
 {
-    public class Bookmark
+    public class Bookmark : EntityBase
     {
-        public int Id { get; set; }
         public DateTime DateСreation { get; set; }
         public string Name { get; set; }
         public string Url { get; set; }

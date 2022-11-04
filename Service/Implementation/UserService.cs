@@ -1,5 +1,6 @@
 ﻿using MyBookmarksAPI.DAL.Interface;
 using MyBookmarksAPI.Domain.Model;
+using MyBookmarksAPI.Domain.TDOModel;
 using MyBookmarksAPI.Service.Interface;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace MyBookmarksAPI.Service
             _userRepository = userRepository;
         }
 
-        public Task<User> Create(User entity)
+        public Task<User> Create(UserCreateTDO model)
         {
             throw new NotImplementedException();
         }
@@ -27,7 +28,7 @@ namespace MyBookmarksAPI.Service
             throw new NotImplementedException();
         }
 
-        public Task<IQueryable<User>> GetEntities()
+        public Task<IQueryable<User>> GetAll()
         {
             throw new NotImplementedException();
         }

@@ -6,13 +6,19 @@ using System.Threading.Tasks;
 
 namespace MyBookmarksAPI.Domain.Model
 {
-    public class User
+    public class User : EntityBase
     {
-        public long Id { get; set; }
         [MaxLength(25)]
         public string Name { get; set; }
+
+        [MaxLength(45)]
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
+
+        [DataType(DataType.Password)]
         public byte[] Password { get; set; }
+
+        [DataType(DataType.Password)]
         public byte[] Salt { get; set; }
 
 

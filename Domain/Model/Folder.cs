@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace MyBookmarksAPI.Domain.Model
 {
-    public class Folder
+    public class Folder : EntityBase
     {
-        public long Id { get; set; }
         [MaxLength(20)]
         public string Name { get; set; }
 
