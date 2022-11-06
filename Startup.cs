@@ -40,9 +40,15 @@ namespace MyBookmarksAPI
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyBookmarksAPI", Version = "v1" });
             });
 
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
+
             services.AddScoped<IUserService, UserService>();
 
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IFolderRepository, FolderRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -10,5 +10,6 @@ namespace MyBookmarksAPI.Service.Interface
     public interface IUserService : IServiceBase<User>
     {
         Task<User> Create(UserCreateTDO entity);
+        void CreateStartFolders(int quantityFolder, long userId);
     }
 }

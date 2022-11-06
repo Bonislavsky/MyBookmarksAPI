@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyBookmarksAPI.DAL;
 using MyBookmarksAPI.Domain.Model;
+using MyBookmarksAPI.Domain.TDOModel;
 using MyBookmarksAPI.Service.Interface;
 
 namespace MyBookmarksAPI.Controllers
@@ -24,14 +25,12 @@ namespace MyBookmarksAPI.Controllers
             _userService = userService;
         }
 
-        // GET: api/Users
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
             return await _context.Users.ToListAsync();
         }
 
-        // GET: api/Users/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(long id)
         {
@@ -45,8 +44,6 @@ namespace MyBookmarksAPI.Controllers
             return user;
         }
 
-        // PUT: api/Users/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser(long id, User user)
         {
@@ -76,18 +73,19 @@ namespace MyBookmarksAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Users
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
+        public async Task<ActionResult<User>> CreateUser(UserCreateTDO model)
         {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
+            }
 
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
+            User user = await _userService.Create(model);
+            _userService.CreateStartFolders(3, user.Id);
+            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
         }
 
-        // DELETE: api/Users/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(long id)
         {
