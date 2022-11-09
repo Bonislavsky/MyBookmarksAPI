@@ -30,21 +30,26 @@ namespace MyBookmarksAPI.Service
                 Name = model.Name,
                 Salt = TmpSalt,
                 Password = HashPasswordSHA512.HashPasswordSalt(model.Password, TmpSalt),
-            };
-
-            return await _userRepository.Create(user);
+            };  
+            await _userRepository.Create(user);
+            return user;
         }
 
-        public async void CreateStartFolders(int quantityFolder, long userId)
+        public async Task<List<Folder>> CreateStartFolders(int quantityFolder, long userId)
         {
+            List<Folder> arrFolder = new(quantityFolder);
+
             for (int i = 0; i < quantityFolder; i++)
             {
-                await _folderRepository.Create(new Folder
+                Folder tmpFolder = await _folderRepository.Create(new Folder
                 {
                     Name = $"Папка №{i + 1}",
                     UserId = userId,
                 });
+                arrFolder.Add(tmpFolder);
             }
+
+            return arrFolder;
         }
 
         public void Delete(long id)
@@ -57,9 +62,14 @@ namespace MyBookmarksAPI.Service
             throw new NotImplementedException();
         }
 
-        public Task<User> GetyById(long id)
+        public async Task<User> GetyById(long id)
         {
-            throw new NotImplementedException();
+            return await _userRepository.GetByCondition(u => u.Id == id);
+        }
+
+        public void Save()
+        {
+            _userRepository.Save();
         }
 
         public void Update(User entity)

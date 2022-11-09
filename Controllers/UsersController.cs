@@ -34,7 +34,7 @@ namespace MyBookmarksAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(long id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _userService.GetyById(id);
 
             if (user == null)
             {
@@ -82,7 +82,9 @@ namespace MyBookmarksAPI.Controllers
             }
 
             User user = await _userService.Create(model);
-            _userService.CreateStartFolders(3, user.Id);
+            user.Folders = await _userService.CreateStartFolders(3, user.Id);
+            _userService.Save();
+
             return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
         }
 

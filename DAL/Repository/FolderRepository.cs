@@ -15,10 +15,5 @@ namespace MyBookmarksAPI.DAL.Repository
         {
             _dbContext = dbContext;
         }
-
-        public override async Task<Folder> GetById(long id)
-        {
-            return await _dbContext.Folders.FirstOrDefaultAsync(u => u.Id == id);
-        }
     }
 }
