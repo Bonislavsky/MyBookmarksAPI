@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyBookmarksAPI.DAL.Interface;
+using MyBookmarksAPI.Domain.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,24 +11,27 @@ namespace MyBookmarksAPI.DAL.Repository
 {
     public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {
-        protected MyBookmarksDbContext _dbContext { get; set; }
+        protected readonly MyBookmarksDbContext _dbContext;
+        protected readonly DbSet<T> _dbSet;
 
-        public RepositoryBase(MyBookmarksDbContext dbContext) => _dbContext = dbContext;
+        public RepositoryBase(MyBookmarksDbContext dbContext)
+        {
+            _dbContext = dbContext;
+            _dbSet = dbContext.Set<T>();
+        }
 
-        public Task<T> GetByCondition(Expression<Func<T, bool>> expression) => _dbContext.Set<T>().FirstOrDefaultAsync(expression);
+        public Task<T> GetByCondition(Expression<Func<T, bool>> expression) => _dbSet.SingleOrDefaultAsync(expression);
 
         public virtual async Task<T> Create(T entity)
         {
-            await _dbContext.Set<T>().AddAsync(entity);
+            await _dbSet.AddAsync(entity);
             return entity;
         }
 
-        public async Task<IEnumerable<T>> GetAll() => await _dbContext.Set<T>().ToListAsync();
+        public IQueryable<T> GetAll() => _dbSet;
 
-        public void Delete(T entity) => _dbContext.Set<T>().Remove(entity);
+        public void Delete(T entity) => _dbSet.Remove(entity);
 
         public void Update(T entity) => _dbContext.Attach(entity).State = EntityState.Modified;
-
-        public async void Save() => await _dbContext.SaveChangesAsync();
     }
 }

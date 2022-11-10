@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Models;
 using MyBookmarksAPI.DAL;
 using MyBookmarksAPI.DAL.Interface;
 using MyBookmarksAPI.DAL.Repository;
+using MyBookmarksAPI.DAL.Wrapper;
 using MyBookmarksAPI.Service;
 using MyBookmarksAPI.Service.Interface;
 using System;
@@ -49,6 +50,9 @@ namespace MyBookmarksAPI
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IFolderRepository, FolderRepository>();
+            services.AddScoped<IBookmarkRepository, BookmarkRepository>();
+
+            services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -10,10 +10,12 @@ namespace MyBookmarksAPI.DAL.Repository
 {
     public class UserRepository : RepositoryBase<User>, IUserRepository
     {
-        private new readonly MyBookmarksDbContext _dbContext;
         public UserRepository(MyBookmarksDbContext dbContext) : base(dbContext) 
         {
-            _dbContext = dbContext;
         }
+
+        public Task<bool> UserExists(long id) => _dbSet.AnyAsync(u => u.Id == id);
+
+        public Task<bool> UserExists(string email) => _dbSet.AnyAsync(u => u.Email.Equals(email));
     }
 }

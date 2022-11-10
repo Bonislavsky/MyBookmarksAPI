@@ -16,59 +16,55 @@ namespace MyBookmarksAPI.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly MyBookmarksDbContext _context;
         private readonly IUserService _userService;
 
-        public UsersController(MyBookmarksDbContext context, IUserService userService)
+        public UsersController(IUserService userService)
         {
-            _context = context;
             _userService = userService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            return await _userService.GetAll();
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(long id)
         {
-            var user = await _userService.GetyById(id);
-
-            if (user == null)
+            if (!await _userService.EntityExists(id))
             {
                 return NotFound();
             }
 
-            return user;
+            return await _userService.GetyById(id);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser(long id, User user)
         {
-            if (id != user.Id)
-            {
-                return BadRequest();
-            }   
+            //if (id != user.Id)
+            //{
+            //    return BadRequest();
+            //}
 
-            _context.Entry(user).State = EntityState.Modified;
+            //_context.Entry(user).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            //try
+            //{
+            //    await _context.SaveChangesAsync();
+            //}
+            //catch (DbUpdateConcurrencyException)
+            //{
+            //    if (!UserExists(id))
+            //    {
+            //        return NotFound();
+            //    }
+            //    else
+            //    {
+            //        throw;
+            //    }
+            //}
 
             return NoContent();
         }
@@ -81,6 +77,11 @@ namespace MyBookmarksAPI.Controllers
                 return UnprocessableEntity(ModelState);
             }
 
+            if (!await _userService.EntityExists(model.Email))
+            {
+                return BadRequest();
+            }
+
             User user = await _userService.Create(model);
             user.Folders = await _userService.CreateStartFolders(3, user.Id);
             _userService.Save();
@@ -91,21 +92,16 @@ namespace MyBookmarksAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(long id)
         {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
+            //var user = await _context.Users.FindAsync(id);
+            //if (user == null)
+            //{
+            //    return NotFound();
+            //}
 
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
+            //_context.Users.Remove(user);
+            //await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool UserExists(long id)
-        {
-            return _context.Users.Any(e => e.Id == id);
         }
     }
 }

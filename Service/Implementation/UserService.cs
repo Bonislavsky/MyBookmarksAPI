@@ -1,4 +1,6 @@
-﻿using MyBookmarksAPI.DAL.Interface;
+﻿using Microsoft.EntityFrameworkCore;
+using MyBookmarksAPI.DAL.Interface;
+using MyBookmarksAPI.DAL.Wrapper;
 using MyBookmarksAPI.Domain.Helpers;
 using MyBookmarksAPI.Domain.Model;
 using MyBookmarksAPI.Domain.TDOModel;
@@ -12,13 +14,11 @@ namespace MyBookmarksAPI.Service
 {
     public class UserService : IUserService
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IFolderRepository _folderRepository;
+        private readonly IRepositoryWrapper _repositoryWrapper;
 
-        public UserService(IUserRepository userRepository, IFolderRepository folderRepository)
+        public UserService(IRepositoryWrapper repositoryWrapper)
         {
-            _userRepository = userRepository;
-            _folderRepository = folderRepository;
+            _repositoryWrapper = repositoryWrapper;
         }
 
         public async Task<User> Create(UserCreateTDO model)
@@ -31,7 +31,7 @@ namespace MyBookmarksAPI.Service
                 Salt = TmpSalt,
                 Password = HashPasswordSHA512.HashPasswordSalt(model.Password, TmpSalt),
             };  
-            await _userRepository.Create(user);
+            await _repositoryWrapper.User.Create(user);
             return user;
         }
 
@@ -41,7 +41,7 @@ namespace MyBookmarksAPI.Service
 
             for (int i = 0; i < quantityFolder; i++)
             {
-                Folder tmpFolder = await _folderRepository.Create(new Folder
+                Folder tmpFolder = await _repositoryWrapper.Folder.Create(new Folder
                 {
                     Name = $"Папка №{i + 1}",
                     UserId = userId,
@@ -52,25 +52,21 @@ namespace MyBookmarksAPI.Service
             return arrFolder;
         }
 
-        public void Delete(long id)
+        public async void Delete(long id)
         {
-            throw new NotImplementedException();
+            User user = await GetyById(id);
+            //_repositoryWrapper.User.Delete();
         }
 
-        public Task<IQueryable<User>> GetAll()
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<bool> EntityExists(long id) => await _repositoryWrapper.User.UserExists(id);
 
-        public async Task<User> GetyById(long id)
-        {
-            return await _userRepository.GetByCondition(u => u.Id == id);
-        }
+        public async Task<bool> EntityExists(string email) => await _repositoryWrapper.User.UserExists(email);
 
-        public void Save()
-        {
-            _userRepository.Save();
-        }
+        public void Save() => _repositoryWrapper.SaveAsync();
+
+        public async Task<List<User>> GetAll() => await _repositoryWrapper.User.GetAll().ToListAsync();
+
+        public async Task<User> GetyById(long id) => await _repositoryWrapper.User.GetByCondition(u => u.Id == id);
 
         public void Update(User entity)
         {
