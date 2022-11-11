@@ -21,7 +21,7 @@ namespace MyBookmarksAPI.Service
             _repositoryWrapper = repositoryWrapper;
         }
 
-        public async Task<User> Create(UserCreateTDO model)
+        public async Task<User> Create(UserDto model)
         {
             var TmpSalt = HashPasswordSHA512.CreateSalt();
             User user = new User
@@ -62,7 +62,7 @@ namespace MyBookmarksAPI.Service
 
         public async Task<User> GetyById(long id) => await _repositoryWrapper.User.GetByCondition(u => u.Id == id);
 
-        public void Update(User entity)
+        public void Update(UserDto model)
         {
             throw new NotImplementedException();
         }

@@ -41,7 +41,7 @@ namespace MyBookmarksAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(long id, User user)
+        public async Task<IActionResult> PutUser(long id, UserDto model)
         {
             //if (id != user.Id)
             //{
@@ -70,7 +70,7 @@ namespace MyBookmarksAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<User>> CreateUser(UserCreateTDO model)
+        public async Task<ActionResult<User>> CreateUser(UserDto model)
         {
             if (!ModelState.IsValid)
             {
