@@ -52,17 +52,11 @@ namespace MyBookmarksAPI.Service
             return arrFolder;
         }
 
-        public async void Delete(long id)
-        {
-            User user = await GetyById(id);
-            //_repositoryWrapper.User.Delete();
-        }
+        public async Task Delete(long id) => _repositoryWrapper.User.Delete(await GetyById(id));
 
         public async Task<bool> EntityExists(long id) => await _repositoryWrapper.User.UserExists(id);
 
         public async Task<bool> EntityExists(string email) => await _repositoryWrapper.User.UserExists(email);
-
-        public void Save() => _repositoryWrapper.SaveAsync();
 
         public async Task<List<User>> GetAll() => await _repositoryWrapper.User.GetAll().ToListAsync();
 
@@ -72,5 +66,7 @@ namespace MyBookmarksAPI.Service
         {
             throw new NotImplementedException();
         }
+
+        public void Save() => _repositoryWrapper.SaveAsync();
     }
 }

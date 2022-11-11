@@ -77,7 +77,7 @@ namespace MyBookmarksAPI.Controllers
                 return UnprocessableEntity(ModelState);
             }
 
-            if (!await _userService.EntityExists(model.Email))
+            if (await _userService.EntityExists(model.Email))
             {
                 return BadRequest();
             }
@@ -92,14 +92,13 @@ namespace MyBookmarksAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(long id)
         {
-            //var user = await _context.Users.FindAsync(id);
-            //if (user == null)
-            //{
-            //    return NotFound();
-            //}
+            if (!await _userService.EntityExists(id))
+            {
+                return NotFound();
+            }
 
-            //_context.Users.Remove(user);
-            //await _context.SaveChangesAsync();
+            await _userService.Delete(id);
+            _userService.Save();
 
             return NoContent();
         }

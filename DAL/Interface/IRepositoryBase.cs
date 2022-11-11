@@ -9,9 +9,11 @@ namespace MyBookmarksAPI.DAL.Interface
     public interface IRepositoryBase<T>
     {
         IQueryable<T> GetAll();
+        IQueryable<T> GetListByCondition(Expression<Func<T, bool>> expression);
         Task<T> GetByCondition(Expression<Func<T, bool>> expression);
         Task<T> Create(T entity);
         void Update(T entity);
         void Delete(T entity);
+        void DeleteRange(IEnumerable<T> listEntity);
     }
 }

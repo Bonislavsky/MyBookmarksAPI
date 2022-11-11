@@ -22,6 +22,8 @@ namespace MyBookmarksAPI.DAL.Repository
 
         public Task<T> GetByCondition(Expression<Func<T, bool>> expression) => _dbSet.SingleOrDefaultAsync(expression);
 
+        public IQueryable<T> GetListByCondition(Expression<Func<T, bool>> expression) => _dbSet.Where(expression);
+
         public virtual async Task<T> Create(T entity)
         {
             await _dbSet.AddAsync(entity);
@@ -31,6 +33,8 @@ namespace MyBookmarksAPI.DAL.Repository
         public IQueryable<T> GetAll() => _dbSet;
 
         public void Delete(T entity) => _dbSet.Remove(entity);
+
+        public void DeleteRange(IEnumerable<T> listEntity) => _dbSet.RemoveRange(listEntity);
 
         public void Update(T entity) => _dbContext.Attach(entity).State = EntityState.Modified;
     }
