@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace MyBookmarksAPI.Domain.TDOModel
 {
-    public class BookmarkTDO
+    public class BookmarkDto
     {
         public int Id { get; set; }
-        public DateTime DateСreation { get; set; }
-        [MaxLength(25)]
+        public DateTime DateСreation { get; set; } = DateTime.Now;
         public string Name { get; set; }
         public string Url { get; set; }
 

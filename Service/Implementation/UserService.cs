@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MyBookmarksAPI.DAL.Interface;
 using MyBookmarksAPI.DAL.Wrapper;
 using MyBookmarksAPI.Domain.DtoModel.UserDtoModel;
@@ -16,13 +17,15 @@ namespace MyBookmarksAPI.Service
     public class UserService : IUserService
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly IMapper _mapper;
 
-        public UserService(IRepositoryWrapper repositoryWrapper)
+        public UserService(IRepositoryWrapper repositoryWrapper, IMapper mapper)
         {
             _repositoryWrapper = repositoryWrapper;
+            _mapper = mapper;
         }
 
-        public async Task<User> Create(UserCreateDto model)
+        public async Task<UserDto> Create(UserCreateDto model)
         {
             var TmpSalt = HashPasswordSHA512.CreateSalt();
             User user = new User
@@ -31,23 +34,26 @@ namespace MyBookmarksAPI.Service
                 Name = model.Name,
                 Salt = TmpSalt,
                 Password = HashPasswordSHA512.HashPasswordSalt(model.Password, TmpSalt),
-            };  
-            await _repositoryWrapper.User.Create(user);
-            return user;
+            };
+            await _repositoryWrapper.User.Create(user);            
+
+            return _mapper.Map<UserDto>(user);
         }
 
-        public async Task<List<Folder>> CreateStartFolders(int quantityFolder, long userId)
+        public async Task<List<FolderDto>> CreateStartFolders(int quantityFolder, long userId)
         {
-            List<Folder> arrFolder = new(quantityFolder);
+            List<FolderDto> arrFolder = new(quantityFolder);
 
             for (int i = 0; i < quantityFolder; i++)
             {
-                Folder tmpFolder = await _repositoryWrapper.Folder.Create(new Folder
+                Folder folder = new Folder
                 {
                     Name = $"Папка №{i + 1}",
                     UserId = userId,
-                });
-                arrFolder.Add(tmpFolder);
+                };
+
+                await _repositoryWrapper.Folder.Create(folder);
+                arrFolder.Add(_mapper.Map<FolderDto>(folder));
             }
 
             return arrFolder;
@@ -63,16 +69,16 @@ namespace MyBookmarksAPI.Service
 
         public async Task<User> GetyById(long id) => await _repositoryWrapper.User.GetByCondition(u => u.Id == id);
 
-        public async void Update(UserUpdateDto model)
+        public async Task<UserDto> Update(UserUpdateDto model)
         {
             User user = await GetyById(model.Id);
 
-            user.Email = model.Email;
-            user.Name = model.Name;
+            _mapper.Map(model, user);
 
-            _repositoryWrapper.User.Update(user);
+            return _mapper.Map<UserDto>(user); 
         }
 
-        public void Save() => _repositoryWrapper.SaveAsync();
+        public async Task Save() => await _repositoryWrapper.SaveAsync();
+
     }
 }

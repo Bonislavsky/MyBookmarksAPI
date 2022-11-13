@@ -6,13 +6,12 @@ using System.Threading.Tasks;
 
 namespace MyBookmarksAPI.Domain.TDOModel
 {
-    public class FolderTDO
+    public class FolderDto
     {
         public long Id { get; set; }
-        [MaxLength(20)]
         public string Name { get; set; }
         public long UserId { get; set; }
 
-        public List<BookmarkTDO> BookMarks { get; set; }
+        public List<BookmarkDto> BookMarks { get; set; }
     }
 }

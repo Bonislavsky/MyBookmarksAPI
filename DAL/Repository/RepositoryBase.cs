@@ -24,10 +24,10 @@ namespace MyBookmarksAPI.DAL.Repository
 
         public IQueryable<T> GetListByCondition(Expression<Func<T, bool>> expression) => _dbSet.Where(expression);
 
-        public virtual async Task<T> Create(T entity)
+        public virtual async Task Create(T entity)
         {
             await _dbSet.AddAsync(entity);
-            return entity;
+            await _dbContext.SaveChangesAsync();
         }
 
         public IQueryable<T> GetAll() => _dbSet;

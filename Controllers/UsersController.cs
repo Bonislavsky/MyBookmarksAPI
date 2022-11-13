@@ -42,7 +42,7 @@ namespace MyBookmarksAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditUser(long id, UserUpdateDto model)
+        public async Task<ActionResult<UserDto>> EditUser(long id, UserUpdateDto model)
         {
             if (!ModelState.IsValid)
             {
@@ -54,18 +54,18 @@ namespace MyBookmarksAPI.Controllers
                 return BadRequest("User ID mismatch");
             }
 
-            if (await _userService.EntityExists(id))
+            if (!await _userService.EntityExists(id))
             {
                 return NotFound($"User with Id {id} not found");
             }
-            
-            _userService.Update(model);
-            _userService.Save();
-            return NoContent();
+
+            UserDto user = await _userService.Update(model);
+            await _userService.Save();
+            return Ok(user);
         }
 
         [HttpPost]
-        public async Task<ActionResult<User>> CreateUser(UserCreateDto model)
+        public async Task<ActionResult<UserDto>> CreateUser(UserCreateDto model)
         {
             if (!ModelState.IsValid)
             {
@@ -77,9 +77,8 @@ namespace MyBookmarksAPI.Controllers
                 return BadRequest();
             }
 
-            User user = await _userService.Create(model);
+            UserDto user = await _userService.Create(model);
             user.Folders = await _userService.CreateStartFolders(3, user.Id);
-            _userService.Save();
 
             return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
         }
@@ -93,7 +92,7 @@ namespace MyBookmarksAPI.Controllers
             }
 
             await _userService.Delete(id);
-            _userService.Save();
+            await _userService.Save();
 
             return NoContent();
         }

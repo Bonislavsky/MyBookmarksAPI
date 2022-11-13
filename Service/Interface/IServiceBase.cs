@@ -12,6 +12,6 @@ namespace MyBookmarksAPI.Service.Interface
         Task<bool> EntityExists(long id);
         Task<bool> EntityExists(string email);
         Task Delete(long id);
-        void Save();
+        Task Save();
     }
 }

@@ -10,8 +10,8 @@ namespace MyBookmarksAPI.Service.Interface
 {
     public interface IUserService : IServiceBase<User>
     {
-        void Update(UserUpdateDto model);
-        Task<User> Create(UserCreateDto model);
-        Task<List<Folder>> CreateStartFolders(int quantityFolder, long userId);
+        Task<UserDto> Update(UserUpdateDto model);
+        Task<UserDto> Create(UserCreateDto model);
+        Task<List<FolderDto>> CreateStartFolders(int quantityFolder, long userId);
     }
 }

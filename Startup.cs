@@ -12,6 +12,8 @@ using MyBookmarksAPI.DAL;
 using MyBookmarksAPI.DAL.Interface;
 using MyBookmarksAPI.DAL.Repository;
 using MyBookmarksAPI.DAL.Wrapper;
+using MyBookmarksAPI.Domain.Helpers;
+using MyBookmarksAPI.Domain.Helpers.Mapping;
 using MyBookmarksAPI.Service;
 using MyBookmarksAPI.Service.Interface;
 using System;
@@ -45,6 +47,10 @@ namespace MyBookmarksAPI
                 .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
+
+            services.AddAutoMapper(typeof(AppMappingProfileUser));
+            services.AddAutoMapper(typeof(AppMappingProfileFolder));
+            services.AddAutoMapper(typeof(AppMappingProfileBookmark));
 
             services.AddScoped<IUserService, UserService>();
 
