@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyBookmarksAPI.DAL;
+using MyBookmarksAPI.Domain.DtoModel.UserDtoModel;
 using MyBookmarksAPI.Domain.Model;
 using MyBookmarksAPI.Domain.TDOModel;
 using MyBookmarksAPI.Service.Interface;
@@ -41,36 +42,30 @@ namespace MyBookmarksAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(long id, UserDto model)
+        public async Task<IActionResult> EditUser(long id, UserUpdateDto model)
         {
-            //if (id != user.Id)
-            //{
-            //    return BadRequest();
-            //}
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
+            }
 
-            //_context.Entry(user).State = EntityState.Modified;
+            if (id != model.Id)
+            {
+                return BadRequest("User ID mismatch");
+            }
 
-            //try
-            //{
-            //    await _context.SaveChangesAsync();
-            //}
-            //catch (DbUpdateConcurrencyException)
-            //{
-            //    if (!UserExists(id))
-            //    {
-            //        return NotFound();
-            //    }
-            //    else
-            //    {
-            //        throw;
-            //    }
-            //}
-
+            if (await _userService.EntityExists(id))
+            {
+                return NotFound($"User with Id {id} not found");
+            }
+            
+            _userService.Update(model);
+            _userService.Save();
             return NoContent();
         }
 
         [HttpPost]
-        public async Task<ActionResult<User>> CreateUser(UserDto model)
+        public async Task<ActionResult<User>> CreateUser(UserCreateDto model)
         {
             if (!ModelState.IsValid)
             {

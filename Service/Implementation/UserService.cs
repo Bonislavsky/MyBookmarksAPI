@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyBookmarksAPI.DAL.Interface;
 using MyBookmarksAPI.DAL.Wrapper;
+using MyBookmarksAPI.Domain.DtoModel.UserDtoModel;
 using MyBookmarksAPI.Domain.Helpers;
 using MyBookmarksAPI.Domain.Model;
 using MyBookmarksAPI.Domain.TDOModel;
@@ -21,7 +22,7 @@ namespace MyBookmarksAPI.Service
             _repositoryWrapper = repositoryWrapper;
         }
 
-        public async Task<User> Create(UserDto model)
+        public async Task<User> Create(UserCreateDto model)
         {
             var TmpSalt = HashPasswordSHA512.CreateSalt();
             User user = new User
@@ -62,9 +63,14 @@ namespace MyBookmarksAPI.Service
 
         public async Task<User> GetyById(long id) => await _repositoryWrapper.User.GetByCondition(u => u.Id == id);
 
-        public void Update(UserDto model)
+        public async void Update(UserUpdateDto model)
         {
-            throw new NotImplementedException();
+            User user = await GetyById(model.Id);
+
+            user.Email = model.Email;
+            user.Name = model.Name;
+
+            _repositoryWrapper.User.Update(user);
         }
 
         public void Save() => _repositoryWrapper.SaveAsync();

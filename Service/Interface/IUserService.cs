@@ -1,4 +1,5 @@
-﻿using MyBookmarksAPI.Domain.Model;
+﻿using MyBookmarksAPI.Domain.DtoModel.UserDtoModel;
+using MyBookmarksAPI.Domain.Model;
 using MyBookmarksAPI.Domain.TDOModel;
 using System;
 using System.Collections.Generic;
@@ -9,8 +10,8 @@ namespace MyBookmarksAPI.Service.Interface
 {
     public interface IUserService : IServiceBase<User>
     {
-        void Update(UserDto model);
-        Task<User> Create(UserDto model);
+        void Update(UserUpdateDto model);
+        Task<User> Create(UserCreateDto model);
         Task<List<Folder>> CreateStartFolders(int quantityFolder, long userId);
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyBookmarksAPI.Domain.TDOModel
 {
-    public class UserDto
+    public class UserCreateDto
     {      
         [Required(ErrorMessage = "Вкажіть електрону пошту")]
         [StringLength(45, MinimumLength = 5, ErrorMessage = "довжина повинна бути від 5 до 45 символів")]
