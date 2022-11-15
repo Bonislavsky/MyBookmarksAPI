@@ -16,6 +16,6 @@ namespace MyBookmarksAPI.DAL
 
         public DbSet<User> Users { get; set; }
         public DbSet<Folder> Folders { get; set; }
-        public DbSet<Bookmark> BookMarks { get; set; }
+        public DbSet<Bookmark> Bookmarks { get; set; }
     }
 }

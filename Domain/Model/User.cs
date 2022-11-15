@@ -23,6 +23,6 @@ namespace MyBookmarksAPI.Domain.Model
 
 
         //Navigation Properties
-        public List<Folder> Folders { get; set; }
+        public List<Folder> Folders { get; set; } = new();
     }
 }

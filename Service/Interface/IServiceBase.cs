@@ -7,11 +7,11 @@ namespace MyBookmarksAPI.Service.Interface
 {
     public interface IServiceBase<T>
     {
+        Task<bool> EntityExists(long id);
         Task<List<T>> GetAll();
         Task<T> GetyById(long id);
-        Task<bool> EntityExists(long id);
-        Task<bool> EntityExists(string email);
         Task Delete(long id);
         Task Save();
+        T Update(T model);
     }
 }

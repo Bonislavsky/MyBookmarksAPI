@@ -22,7 +22,7 @@ namespace MyBookmarksAPI.DAL.Repository
 
         public Task<T> GetByCondition(Expression<Func<T, bool>> expression) => _dbSet.SingleOrDefaultAsync(expression);
 
-        public IQueryable<T> GetListByCondition(Expression<Func<T, bool>> expression) => _dbSet.Where(expression);
+        public IQueryable<T> GetListByCondition(Expression<Func<T, bool>> expression) => _dbSet.Where(expression).AsNoTracking();
 
         public virtual async Task Create(T entity)
         {
@@ -30,7 +30,7 @@ namespace MyBookmarksAPI.DAL.Repository
             await _dbContext.SaveChangesAsync();
         }
 
-        public IQueryable<T> GetAll() => _dbSet;
+        public virtual IQueryable<T> GetAll() => _dbSet.AsNoTracking();
 
         public void Delete(T entity) => _dbSet.Remove(entity);
 

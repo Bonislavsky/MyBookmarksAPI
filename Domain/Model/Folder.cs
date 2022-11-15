@@ -15,6 +15,6 @@ namespace MyBookmarksAPI.Domain.Model
         public long UserId { get; set; }
         public User User { get; set; }
 
-        public List<Bookmark> BookMarks { get; set; }
+        public List<Bookmark> BookMarks { get; set; } = new();
     }
 }

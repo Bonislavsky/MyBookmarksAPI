@@ -14,6 +14,13 @@ namespace MyBookmarksAPI.DAL.Repository
         {
         }
 
+        public override IQueryable<User> GetAll()
+        {
+            return _dbSet
+                .Include(u => u.Folders)
+                .ThenInclude(f=> f.BookMarks)
+                .AsNoTracking();
+        }
         public Task<bool> UserExists(long id) => _dbSet.AnyAsync(u => u.Id == id);
 
         public Task<bool> UserExists(string email) => _dbSet.AnyAsync(u => u.Email.Equals(email));

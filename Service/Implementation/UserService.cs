@@ -17,15 +17,13 @@ namespace MyBookmarksAPI.Service
     public class UserService : IUserService
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
-        private readonly IMapper _mapper;
 
-        public UserService(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+        public UserService(IRepositoryWrapper repositoryWrapper)
         {
             _repositoryWrapper = repositoryWrapper;
-            _mapper = mapper;
         }
 
-        public async Task<UserDto> Create(UserCreateDto model)
+        public async Task<User> Create(UserCreateDto model)
         {
             var TmpSalt = HashPasswordSHA512.CreateSalt();
             User user = new User
@@ -37,12 +35,12 @@ namespace MyBookmarksAPI.Service
             };
             await _repositoryWrapper.User.Create(user);            
 
-            return _mapper.Map<UserDto>(user);
+            return user;
         }
 
-        public async Task<List<FolderDto>> CreateStartFolders(int quantityFolder, long userId)
+        public async Task<List<Folder>> CreateStartFolders(int quantityFolder, long userId)
         {
-            List<FolderDto> arrFolder = new(quantityFolder);
+            List<Folder> arrFolder = new(quantityFolder);
 
             for (int i = 0; i < quantityFolder; i++)
             {
@@ -53,10 +51,17 @@ namespace MyBookmarksAPI.Service
                 };
 
                 await _repositoryWrapper.Folder.Create(folder);
-                arrFolder.Add(_mapper.Map<FolderDto>(folder));
+                arrFolder.Add(folder);
             }
 
             return arrFolder;
+        }
+
+        public User Update(User model)
+        {
+            _repositoryWrapper.User.Update(model);
+
+            return model;
         }
 
         public async Task Delete(long id) => _repositoryWrapper.User.Delete(await GetyById(id));
@@ -69,16 +74,6 @@ namespace MyBookmarksAPI.Service
 
         public async Task<User> GetyById(long id) => await _repositoryWrapper.User.GetByCondition(u => u.Id == id);
 
-        public async Task<UserDto> Update(UserUpdateDto model)
-        {
-            User user = await GetyById(model.Id);
-
-            _mapper.Map(model, user);
-
-            return _mapper.Map<UserDto>(user); 
-        }
-
         public async Task Save() => await _repositoryWrapper.SaveAsync();
-
     }
 }

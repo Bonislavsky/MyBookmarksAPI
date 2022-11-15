@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,27 +19,30 @@ namespace MyBookmarksAPI.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IMapper _mapper;
 
-        public UsersController(IUserService userService)
+        public UsersController(IUserService userService, IMapper mapper)
         {
             _userService = userService;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
         {
-            return await _userService.GetAll();
+            return _mapper.Map<List<UserDto>>(await _userService.GetAll());
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(long id)
+        public async Task<ActionResult<UserDto>> GetUser(long id)
         {
-            if (!await _userService.EntityExists(id))
+            var user = await _userService.GetyById(id);
+            if (user == null)
             {
-                return NotFound();
+                return NotFound($"User with Id {id} not found");
             }
 
-            return await _userService.GetyById(id);
+            return _mapper.Map<UserDto>(user);
         }
 
         [HttpPut("{id}")]
@@ -54,14 +58,19 @@ namespace MyBookmarksAPI.Controllers
                 return BadRequest("User ID mismatch");
             }
 
-            if (!await _userService.EntityExists(id))
+            User user = await _userService.GetyById(id);
+
+            if (user == null)
             {
                 return NotFound($"User with Id {id} not found");
             }
 
-            UserDto user = await _userService.Update(model);
+            _mapper.Map(model, user);
+
+            _userService.Update(user);
             await _userService.Save();
-            return Ok(user);
+
+            return Ok(_mapper.Map<UserDto>(user));
         }
 
         [HttpPost]
@@ -77,10 +86,12 @@ namespace MyBookmarksAPI.Controllers
                 return BadRequest();
             }
 
-            UserDto user = await _userService.Create(model);
+            User user = await _userService.Create(model);
             user.Folders = await _userService.CreateStartFolders(3, user.Id);
 
-            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
+            var userDto = _mapper.Map<UserDto>(user);
+
+            return CreatedAtAction(nameof(GetUser), new { id = userDto.Id }, userDto);
         }
 
         [HttpDelete("{id}")]
