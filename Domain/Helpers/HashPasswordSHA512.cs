@@ -35,5 +35,11 @@ namespace MyBookmarksAPI.Domain.Helpers
                 return hashSha512.ComputeHash(saltPlusPassword);
             }
         }
+
+        static public bool VerifyHash(string password, byte[] saltUser, byte[] hashPasswordUser)
+        {
+            var newHash = HashPasswordSalt(password, saltUser);
+            return hashPasswordUser.SequenceEqual(newHash);
+        }
     }
 }

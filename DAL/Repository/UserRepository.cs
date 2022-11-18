@@ -4,6 +4,7 @@ using MyBookmarksAPI.Domain.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace MyBookmarksAPI.DAL.Repository
@@ -21,6 +22,16 @@ namespace MyBookmarksAPI.DAL.Repository
                 .ThenInclude(f=> f.BookMarks)
                 .AsNoTracking();
         }
+
+        public async Task<User> GetAllDataUser(Expression<Func<User, bool>> expression)
+        {
+            return await _dbSet
+                .Include(u => u.Folders)
+                .ThenInclude(f => f.BookMarks)
+                .AsNoTracking()
+                .SingleOrDefaultAsync(expression);
+        }
+
         public Task<bool> UserExists(long id) => _dbSet.AnyAsync(u => u.Id == id);
 
         public Task<bool> UserExists(string email) => _dbSet.AnyAsync(u => u.Email.Equals(email));

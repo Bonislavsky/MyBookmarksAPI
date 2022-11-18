@@ -18,6 +18,10 @@ namespace MyBookmarksAPI.Domain.TDOModel
         [StringLength(40, MinimumLength = 6, ErrorMessage = "довжина повинна бути від 6 до 40 символів")]
         public string Password { get; set; }
 
+        [Required(ErrorMessage = "Підтвердіть пароль")]
+        [Compare("Password", ErrorMessage = "паролі не збігаются")]
+        public string PasswordConfirme { get; set; }
+
         [Required(ErrorMessage = "Вкажіть Ім'я")]
         [StringLength(25, MinimumLength = 2, ErrorMessage = "довжина повинна бути від 2 до 25 символів")]
         public string Name { get; set; }

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyBookmarksAPI.DAL;
 using MyBookmarksAPI.Domain.DtoModel.UserDtoModel;
+using MyBookmarksAPI.Domain.Helpers.ApiException.UserException;
 using MyBookmarksAPI.Domain.Model;
 using MyBookmarksAPI.Domain.TDOModel;
 using MyBookmarksAPI.Service.Interface;
@@ -43,6 +44,49 @@ namespace MyBookmarksAPI.Controllers
             }
 
             return _mapper.Map<UserDto>(user);
+        }
+
+        [HttpGet("{id}/WithFolders")]
+        public async Task<ActionResult<UserDto>> GetAllDataUser(long id)
+        {
+            var user = await _userService.GetAllDataById(id);
+            if (user == null)
+            {
+                return NotFound($"User with Id {id} not found");
+            }
+
+            return _mapper.Map<UserDto>(user);
+        }
+
+        [HttpPut("{id}/ChangePassword")]
+        public async Task<ActionResult> EditUserPassword(long id, UserChangePassword model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
+            }
+
+            if (id != model.Id)
+            {
+                return BadRequest("User ID mismatch");
+            }
+
+            if (!await _userService.EntityExists(model.Id))
+            {
+                return NotFound($"User with Id {id} not found");
+            }
+
+            try
+            {
+                await _userService.ChangePassword(model);
+                await _userService.Save();
+            }
+            catch (VerifyPasswordUserException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            return Ok();
         }
 
         [HttpPut("{id}")]

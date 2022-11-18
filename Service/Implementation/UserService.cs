@@ -4,6 +4,7 @@ using MyBookmarksAPI.DAL.Interface;
 using MyBookmarksAPI.DAL.Wrapper;
 using MyBookmarksAPI.Domain.DtoModel.UserDtoModel;
 using MyBookmarksAPI.Domain.Helpers;
+using MyBookmarksAPI.Domain.Helpers.ApiException.UserException;
 using MyBookmarksAPI.Domain.Model;
 using MyBookmarksAPI.Domain.TDOModel;
 using MyBookmarksAPI.Service.Interface;
@@ -75,5 +76,18 @@ namespace MyBookmarksAPI.Service
         public async Task<User> GetyById(long id) => await _repositoryWrapper.User.GetByCondition(u => u.Id == id);
 
         public async Task Save() => await _repositoryWrapper.SaveAsync();
+
+        public async Task<User> GetAllDataById(long id) => await _repositoryWrapper.User.GetAllDataUser(u => u.Id == id);
+
+        public async Task ChangePassword(UserChangePassword model)
+        {
+            User user = await GetyById(model.Id);
+            if(!HashPasswordSHA512.VerifyHash(model.CurrentPassword, user.Salt, user.Password))
+            {
+                throw new VerifyPasswordUserException("Не вірний поточний пароль");
+            }
+            user.Password = HashPasswordSHA512.HashPasswordSalt(model.Password, user.Salt);       
+            _repositoryWrapper.User.Update(user);
+        }
     }
 }

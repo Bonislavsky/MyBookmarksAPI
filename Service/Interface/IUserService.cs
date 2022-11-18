@@ -13,5 +13,7 @@ namespace MyBookmarksAPI.Service.Interface
         Task<bool> EntityExists(string email);
         Task<User> Create(UserCreateDto model);
         Task<List<Folder>> CreateStartFolders(int quantityFolder, long userId);
+        Task<User> GetAllDataById(long id);
+        Task ChangePassword(UserChangePassword model);
     }
 }

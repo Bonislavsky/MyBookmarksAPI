@@ -20,7 +20,7 @@ namespace MyBookmarksAPI.DAL.Repository
             _dbSet = dbContext.Set<T>();
         }
 
-        public Task<T> GetByCondition(Expression<Func<T, bool>> expression) => _dbSet.SingleOrDefaultAsync(expression);
+        public Task<T> GetByCondition(Expression<Func<T, bool>> expression) => _dbSet.AsNoTracking().SingleOrDefaultAsync(expression);
 
         public IQueryable<T> GetListByCondition(Expression<Func<T, bool>> expression) => _dbSet.Where(expression).AsNoTracking();
 
