@@ -89,5 +89,17 @@ namespace MyBookmarksAPI.Service
             user.Password = HashPasswordSHA512.HashPasswordSalt(model.Password, user.Salt);       
             _repositoryWrapper.User.Update(user);
         }
+
+        public async Task<User> LoginUser(UserLoginDto model)
+        {
+            User user = await _repositoryWrapper.User.GetByCondition(u => u.Email.Equals(model.Email));
+
+            if(!HashPasswordSHA512.VerifyHash(model.Password, user.Salt, user.Password))
+            {
+                throw new VerifyPasswordUserException("Не вірний пароль");
+            }
+
+            return await GetAllDataById(user.Id);
+        }
     }
 }

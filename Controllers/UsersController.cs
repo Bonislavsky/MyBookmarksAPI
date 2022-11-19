@@ -138,6 +138,29 @@ namespace MyBookmarksAPI.Controllers
             return CreatedAtAction(nameof(GetUser), new { id = userDto.Id }, userDto);
         }
 
+        [HttpPost("Login")]
+        public async Task<ActionResult<UserDto>> VerifyUser(UserLoginDto model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
+            }
+
+            if (!await _userService.EntityExists(model.Email))
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                return _mapper.Map<UserDto>(await _userService.LoginUser(model));
+            }
+            catch (VerifyPasswordUserException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(long id)
         {

@@ -14,6 +14,7 @@ namespace MyBookmarksAPI.Service.Interface
         Task<User> Create(UserCreateDto model);
         Task<List<Folder>> CreateStartFolders(int quantityFolder, long userId);
         Task<User> GetAllDataById(long id);
+        Task<User>LoginUser(UserLoginDto model);
         Task ChangePassword(UserChangePassword model);
     }
 }
