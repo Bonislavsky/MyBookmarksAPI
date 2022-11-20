@@ -10,8 +10,8 @@ using MyBookmarksAPI.DAL;
 namespace MyBookmarksAPI.DAL.Migrations
 {
     [DbContext(typeof(MyBookmarksDbContext))]
-    [Migration("20221016161453_Initial")]
-    partial class Initial
+    [Migration("20221120184335_NewInitial")]
+    partial class NewInitial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,9 +23,9 @@ namespace MyBookmarksAPI.DAL.Migrations
 
             modelBuilder.Entity("MyBookmarksAPI.Domain.Model.Bookmark", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("DateСreation")
@@ -44,7 +44,7 @@ namespace MyBookmarksAPI.DAL.Migrations
 
                     b.HasIndex("FolderId");
 
-                    b.ToTable("BookMarks");
+                    b.ToTable("Bookmarks");
                 });
 
             modelBuilder.Entity("MyBookmarksAPI.Domain.Model.Folder", b =>
@@ -76,7 +76,8 @@ namespace MyBookmarksAPI.DAL.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(45)
+                        .HasColumnType("nvarchar(45)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(25)
