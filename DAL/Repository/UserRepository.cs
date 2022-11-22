@@ -32,8 +32,8 @@ namespace MyBookmarksAPI.DAL.Repository
                 .SingleOrDefaultAsync(expression);
         }
 
-        public Task<bool> UserExists(long id) => _dbSet.AnyAsync(u => u.Id == id);
+        public async Task<bool> UserExists(long id) => await _dbSet.AnyAsync(u => u.Id == id);
 
-        public Task<bool> UserExists(string email) => _dbSet.AnyAsync(u => u.Email.Equals(email));
+        public async Task<bool> UserExists(string email) => await _dbSet.AnyAsync(u => u.Email.Equals(email));
     }
 }

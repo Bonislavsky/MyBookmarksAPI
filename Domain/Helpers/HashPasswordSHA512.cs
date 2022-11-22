@@ -13,12 +13,10 @@ namespace MyBookmarksAPI.Domain.Helpers
 
         static public byte[] CreateSalt()
         {
-            using (var rng = new RNGCryptoServiceProvider())
-            {
-                byte[] saltBytes = new byte[32];
-                rng.GetNonZeroBytes(saltBytes);
-                return saltBytes;
-            }
+            using var rng = new RNGCryptoServiceProvider();
+            byte[] saltBytes = new byte[32];
+            rng.GetNonZeroBytes(saltBytes);
+            return saltBytes;
         }
 
         static public byte[] HashPasswordSalt(string password, byte[] salt)

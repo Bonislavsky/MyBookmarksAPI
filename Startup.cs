@@ -15,6 +15,7 @@ using MyBookmarksAPI.DAL.Wrapper;
 using MyBookmarksAPI.Domain.Helpers;
 using MyBookmarksAPI.Domain.Helpers.Mapping;
 using MyBookmarksAPI.Service;
+using MyBookmarksAPI.Service.Implementation;
 using MyBookmarksAPI.Service.Interface;
 using System;
 using System.Collections.Generic;
@@ -53,6 +54,7 @@ namespace MyBookmarksAPI
             services.AddAutoMapper(typeof(AppMappingProfileBookmark));
 
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IFolderService, FolderService>();
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IFolderRepository, FolderRepository>();
