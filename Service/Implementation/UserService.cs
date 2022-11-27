@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using MyBookmarksAPI.DAL.Interface;
+﻿using Microsoft.EntityFrameworkCore;
 using MyBookmarksAPI.DAL.Wrapper;
 using MyBookmarksAPI.Domain.DtoModel.UserDtoModel;
 using MyBookmarksAPI.Domain.Helpers;
@@ -8,9 +6,7 @@ using MyBookmarksAPI.Domain.Helpers.ApiException.UserException;
 using MyBookmarksAPI.Domain.Model;
 using MyBookmarksAPI.Domain.TDOModel;
 using MyBookmarksAPI.Service.Interface;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MyBookmarksAPI.Service
@@ -58,12 +54,7 @@ namespace MyBookmarksAPI.Service
             return arrFolder;
         }
 
-        public User Update(User model)
-        {
-            _repositoryWrapper.User.Update(model);
-
-            return model;
-        }
+        public void Update(User model) => _repositoryWrapper.User.Update(model);
 
         public async Task Delete(long id) => _repositoryWrapper.User.Delete(await GetyById(id));
 

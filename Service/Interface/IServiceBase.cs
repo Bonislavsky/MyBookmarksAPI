@@ -11,6 +11,6 @@ namespace MyBookmarksAPI.Service.Interface
         Task<T> GetyById(long id);
         Task Delete(long id);
         Task Save();
-        T Update(T model);
+        void Update(T model);
     }
 }

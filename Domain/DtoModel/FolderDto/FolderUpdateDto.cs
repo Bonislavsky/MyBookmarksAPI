@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MyBookmarksAPI.Domain.DtoModel
+namespace MyBookmarksAPI.Domain.DtoModel.FolderDto
 {
     public class FolderUpdateDto
     {

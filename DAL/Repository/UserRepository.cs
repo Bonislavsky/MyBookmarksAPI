@@ -19,7 +19,7 @@ namespace MyBookmarksAPI.DAL.Repository
         {
             return _dbSet
                 .Include(u => u.Folders)
-                .ThenInclude(f=> f.BookMarks)
+                .ThenInclude(f=> f.Bookmarks)
                 .AsNoTracking();
         }
 
@@ -27,7 +27,7 @@ namespace MyBookmarksAPI.DAL.Repository
         {
             return await _dbSet
                 .Include(u => u.Folders)
-                .ThenInclude(f => f.BookMarks)
+                .ThenInclude(f => f.Bookmarks)
                 .AsNoTracking()
                 .SingleOrDefaultAsync(expression);
         }

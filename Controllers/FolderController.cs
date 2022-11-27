@@ -1,12 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using MyBookmarksAPI.Domain.DtoModel;
+using MyBookmarksAPI.Domain.DtoModel.FolderDto;
 using MyBookmarksAPI.Domain.Model;
-using MyBookmarksAPI.Domain.TDOModel;
-using MyBookmarksAPI.Service;
 using MyBookmarksAPI.Service.Interface;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MyBookmarksAPI.Controllers
@@ -24,14 +21,29 @@ namespace MyBookmarksAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("userId:{userId}")]
-        public async Task<ActionResult<IEnumerable<FolderDto>>> GetFolders(long userId)
+        [HttpGet("userId:{userId}/sortBy:{sortParam}")]
+        public async Task<ActionResult<IEnumerable<FolderWithoutBmDto>>> GetFolders(long userId, string sortParam = "Id", bool isDec = false)
         {
-            return _mapper.Map<List<FolderDto>>(await _folderService.GetListByUserId(userId));
+            if (!await _folderService.UserByIdExists(userId))
+            {
+                return NotFound($"User with Id {userId} not found");
+            }
+
+            if (typeof(FolderWithoutBmDto).GetProperty(sortParam) is null)
+            {
+                return BadRequest($"\"{sortParam}\" parametr is not found");
+            }
+
+            return Ok(_mapper.Map<List<FolderWithoutBmDto>>(await _folderService.GetListByUserId(userId, sortParam, isDec ? "DESC" : "ASC")));
+            
+            //catch(FolderPropNameChangedException) 
+            //{
+            //    return Ok(_mapper.Map<List<FolderWithoutBmDto>>(await _folderService.GetListByUserId(userId, "Id", isDec ? "DESC" : "ASC")));
+            //}
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<FolderDto>> GetFolder(long id)
+        public async Task<ActionResult<FolderWithoutBmDto>> GetFolder(long id)
         {
             var folder = await _folderService.GetyById(id);
             if (folder == null)
@@ -39,11 +51,11 @@ namespace MyBookmarksAPI.Controllers
                 return NotFound($"Folder with Id {id} not found");
             }
 
-            return _mapper.Map<FolderDto>(folder);
+            return _mapper.Map<FolderWithoutBmDto>(folder);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<FolderDto>> EditFolder(long id, FolderUpdateDto model)
+        public async Task<ActionResult<FolderWithoutBmDto>> EditFolder(long id, FolderUpdateDto model)
         {
             if (!ModelState.IsValid)
             {
@@ -67,11 +79,11 @@ namespace MyBookmarksAPI.Controllers
             _folderService.Update(folder);
             await _folderService.Save();
 
-            return Ok(_mapper.Map<FolderDto>(folder));
+            return Ok(_mapper.Map<FolderWithoutBmDto>(folder));
         }
 
         [HttpPost]
-        public async Task<ActionResult<FolderDto>> CreateFolder(FolderCreateDto model)
+        public async Task<ActionResult<FolderWithoutBmDto>> CreateFolder(FolderCreateDto model)
         {
             if (!ModelState.IsValid)
             {
@@ -85,7 +97,7 @@ namespace MyBookmarksAPI.Controllers
 
             Folder folder = await _folderService.Create(_mapper.Map<Folder>(model));
 
-            var folderDto = _mapper.Map<FolderDto>(folder);
+            var folderDto = _mapper.Map<FolderWithoutBmDto>(folder);
 
             return CreatedAtAction("GetFolder", new { id = folderDto.Id }, folderDto);
         }

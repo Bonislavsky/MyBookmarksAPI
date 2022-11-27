@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MyBookmarksAPI.Domain.DtoModel;
+using MyBookmarksAPI.Domain.DtoModel.FolderDto;
 
 namespace MyBookmarksAPI.Domain.DtoModel.UserDtoModel
 {
@@ -14,6 +15,6 @@ namespace MyBookmarksAPI.Domain.DtoModel.UserDtoModel
         public string Name { get; set; }
         public string Email { get; set; }
 
-        public List<FolderDto> Folders { get; set; }
+        public List<FolderWithoutBmDto> Folders { get; set; }
     }
 }
