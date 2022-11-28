@@ -37,8 +37,20 @@ namespace MyBookmarksAPI.Controllers
             return Ok(_mapper.Map<List<FolderWithoutBmDto>>(await _folderService.GetListByUserId(userId, sortParam, isDec ? "DESC" : "ASC")));
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<FolderWithoutBmDto>> GetFolder(long id)
+        [HttpGet("WithBookmark/{id}")]
+        public async Task<ActionResult<FolderWithBmDto>> GetFolderWithBookmark(long id)
+        {
+            var folder = await _folderService.GetAllDataById(id);
+            if (folder == null)
+            {
+                return NotFound($"Folder with Id {id} not found");
+            }
+
+            return Ok(_mapper.Map<FolderWithBmDto>(folder));
+        }
+
+        [HttpGet("WithoutBookmark/{id}")]
+        public async Task<ActionResult<FolderWithoutBmDto>> GetFolderWithoutBookmark(long id)
         {
             var folder = await _folderService.GetyById(id);
             if (folder == null)
@@ -46,7 +58,7 @@ namespace MyBookmarksAPI.Controllers
                 return NotFound($"Folder with Id {id} not found");
             }
 
-            return _mapper.Map<FolderWithoutBmDto>(folder);
+            return Ok(_mapper.Map<FolderWithoutBmDto>(folder));
         }
 
         [HttpPut("{id}")]

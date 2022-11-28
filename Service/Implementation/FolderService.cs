@@ -41,5 +41,7 @@ namespace MyBookmarksAPI.Service.Implementation
 
             return model;
         }
+
+        public async Task<Folder> GetAllDataById(long id) => await _repositoryWrapper.Folder.GetAllDataFolder(u => u.Id == id);
     }
 }
