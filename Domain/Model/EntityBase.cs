@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyBookmarksAPI.Domain.Model
 {
-    public class EntityBase
+    public class EntityBase 
     {
         [Key]
         public long Id { get; set; }

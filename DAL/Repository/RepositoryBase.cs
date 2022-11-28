@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MyBookmarksAPI.DAL.Repository
 {
-    public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
+    public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
     {
         protected readonly MyBookmarksDbContext _dbContext;
         protected readonly DbSet<T> _dbSet;
@@ -37,5 +37,7 @@ namespace MyBookmarksAPI.DAL.Repository
         public void DeleteRange(IEnumerable<T> listEntity) => _dbSet.RemoveRange(listEntity);
 
         public void Update(T entity) => _dbContext.Attach(entity).State = EntityState.Modified;
+
+        public async Task<bool> EntityExists(long id) => await _dbSet.AnyAsync(u => u.Id == id);
     }
 }

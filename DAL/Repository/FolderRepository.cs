@@ -13,7 +13,5 @@ namespace MyBookmarksAPI.DAL.Repository
         public FolderRepository(MyBookmarksDbContext dbContext) : base(dbContext)
         {
         }
-
-        public async Task<bool> FolderExists(long id) => await _dbSet.AnyAsync(u => u.Id == id);
     }
 }

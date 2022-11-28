@@ -11,6 +11,7 @@ namespace MyBookmarksAPI.DAL.Interface
         IQueryable<T> GetAll();
         IQueryable<T> GetListByCondition(Expression<Func<T, bool>> expression);
         Task<T> GetByCondition(Expression<Func<T, bool>> expression);
+        Task<bool> EntityExists(long id);
         Task Create(T entity);
         void Update(T entity);
         void Delete(T entity);

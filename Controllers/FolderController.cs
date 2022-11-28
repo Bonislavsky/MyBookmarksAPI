@@ -35,11 +35,6 @@ namespace MyBookmarksAPI.Controllers
             }
 
             return Ok(_mapper.Map<List<FolderWithoutBmDto>>(await _folderService.GetListByUserId(userId, sortParam, isDec ? "DESC" : "ASC")));
-            
-            //catch(FolderPropNameChangedException) 
-            //{
-            //    return Ok(_mapper.Map<List<FolderWithoutBmDto>>(await _folderService.GetListByUserId(userId, "Id", isDec ? "DESC" : "ASC")));
-            //}
         }
 
         [HttpGet("{id}")]
