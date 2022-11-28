@@ -17,12 +17,12 @@ namespace MyBookmarksAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
-        public UsersController(IUserService userService, IMapper mapper)
+        public UserController(IUserService userService, IMapper mapper)
         {
             _userService = userService;
             _mapper = mapper;
@@ -47,7 +47,7 @@ namespace MyBookmarksAPI.Controllers
         }
 
         [HttpGet("{id}/WithFolders")]
-        public async Task<ActionResult<UserDto>> GetAllDataUser(long id)
+        public async Task<ActionResult<UserAllDataDto>> GetAllDataUser(long id)
         {
             var user = await _userService.GetAllDataById(id);
             if (user == null)
@@ -55,7 +55,7 @@ namespace MyBookmarksAPI.Controllers
                 return NotFound($"User with Id {id} not found");
             }
 
-            return _mapper.Map<UserDto>(user);
+            return _mapper.Map<UserAllDataDto>(user);
         }
 
         [HttpPut("{id}/ChangePassword")]

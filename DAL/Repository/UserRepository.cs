@@ -31,7 +31,5 @@ namespace MyBookmarksAPI.DAL.Repository
                 .AsNoTracking()
                 .SingleOrDefaultAsync(expression);
         }
-
-        public async Task<bool> UserExists(string email) => await _dbSet.AnyAsync(u => u.Email.Equals(email));
     }
 }

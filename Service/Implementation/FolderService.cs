@@ -20,7 +20,7 @@ namespace MyBookmarksAPI.Service.Implementation
 
         public async Task Delete(long id) => _repositoryWrapper.Folder.Delete(await GetyById(id));
 
-        public async Task<bool> EntityExists(long id) => await _repositoryWrapper.Folder.EntityExists(id);
+        public async Task<bool> EntityExists(long id) => await _repositoryWrapper.Folder.EntityExists(u => u.Id == id);
 
         public async Task<List<Folder>> GetListByUserId(long userId, string sortParam, string AsdDec)
         {
@@ -29,7 +29,7 @@ namespace MyBookmarksAPI.Service.Implementation
 
         public async Task<Folder> GetyById(long id) => await _repositoryWrapper.Folder.GetByCondition(u => u.Id == id);
 
-        public async Task<bool> UserByIdExists(long userId) => await _repositoryWrapper.User.EntityExists(userId);
+        public async Task<bool> UserByIdExists(long userId) => await _repositoryWrapper.User.EntityExists(u => u.Id == userId);
 
         public async Task Save() => await _repositoryWrapper.SaveAsync();
 

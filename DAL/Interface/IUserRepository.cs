@@ -9,7 +9,6 @@ namespace MyBookmarksAPI.DAL.Interface
 {
     public interface IUserRepository : IRepositoryBase<User>
     {
-        Task<bool> UserExists(string email);
         Task<User> GetAllDataUser(Expression<Func<User, bool>> expression);
     }
 }

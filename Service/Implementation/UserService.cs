@@ -58,9 +58,9 @@ namespace MyBookmarksAPI.Service
 
         public async Task Delete(long id) => _repositoryWrapper.User.Delete(await GetyById(id));
 
-        public async Task<bool> EntityExists(long id) => await _repositoryWrapper.User.EntityExists(id);
+        public async Task<bool> EntityExists(long id) => await _repositoryWrapper.User.EntityExists(u => u.Id == id);
 
-        public async Task<bool> EntityExists(string email) => await _repositoryWrapper.User.UserExists(email);
+        public async Task<bool> EntityExists(string email) => await _repositoryWrapper.User.EntityExists(u => u.Email.Equals(email));
 
         public async Task<List<User>> GetAll() => await _repositoryWrapper.User.GetAll().ToListAsync();
 

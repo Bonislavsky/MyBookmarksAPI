@@ -55,6 +55,7 @@ namespace MyBookmarksAPI
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IFolderService, FolderService>();
+            services.AddScoped<IBookmarkService, BookmarkService>();
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IFolderRepository, FolderRepository>();

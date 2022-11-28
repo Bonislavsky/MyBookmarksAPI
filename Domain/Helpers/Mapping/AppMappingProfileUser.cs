@@ -21,6 +21,9 @@ namespace MyBookmarksAPI.Domain.Helpers
 
             CreateMap<User, UserCreateDto>();
             CreateMap<User, UserCreateDto>().ReverseMap();
+
+            CreateMap<User, UserAllDataDto>();
+            CreateMap<User, UserAllDataDto>().ReverseMap();
         }
     }
 }

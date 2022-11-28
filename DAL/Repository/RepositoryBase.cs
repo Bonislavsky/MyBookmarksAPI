@@ -38,6 +38,6 @@ namespace MyBookmarksAPI.DAL.Repository
 
         public void Update(T entity) => _dbContext.Attach(entity).State = EntityState.Modified;
 
-        public async Task<bool> EntityExists(long id) => await _dbSet.AnyAsync(u => u.Id == id);
+        public async Task<bool> EntityExists(Expression<Func<T, bool>> expression) => await _dbSet.AnyAsync(expression);
     }
 }
