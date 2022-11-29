@@ -1,6 +1,4 @@
-﻿using MyBookmarksAPI.Domain.DtoModel;
-using MyBookmarksAPI.Domain.Model;
-using MyBookmarksAPI.Domain.TDOModel;
+﻿using MyBookmarksAPI.Domain.Model;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

@@ -104,9 +104,9 @@ namespace MyBookmarksAPI.Controllers
 
             Folder folder = await _folderService.Create(_mapper.Map<Folder>(model));
 
-            var folderDto = _mapper.Map<FolderWithoutBmDto>(folder);
+            FolderWithoutBmDto folderDto = _mapper.Map<FolderWithoutBmDto>(folder);
 
-            return CreatedAtAction("GetFolder", new { id = folderDto.Id }, folderDto);
+            return CreatedAtAction("GetFolderWithoutBookmark", new { id = folderDto.Id }, folderDto);
         }
 
         [HttpDelete("{id}")]

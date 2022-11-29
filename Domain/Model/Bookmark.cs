@@ -7,7 +7,7 @@ namespace MyBookmarksAPI.Domain.Model
 {
     public class Bookmark : EntityBase
     {
-        public DateTime DateСreation { get; set; }
+        public DateTime DateСreation { get; set; } = DateTime.UtcNow; 
         public string Name { get; set; }
         public string Url { get; set; }
 

@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using MyBookmarksAPI.Domain.DtoModel.BookmarkDtoModel;
-using MyBookmarksAPI.Domain.DtoModel.FolderDtoModel;
 using MyBookmarksAPI.Domain.Model;
 using MyBookmarksAPI.Service.Interface;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -51,7 +51,7 @@ namespace MyBookmarksAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<FolderWithoutBmDto>> EditBookmark(long id, BookmarkUpdateDto model)
+        public async Task<ActionResult<BookmarkDto>> EditBookmark(long id, BookmarkUpdateDto model)
         {
             if (!ModelState.IsValid)
             {
@@ -75,7 +75,46 @@ namespace MyBookmarksAPI.Controllers
             _bookmarkService.Update(bookmark);
             await _bookmarkService.Save();
 
-            return Ok(_mapper.Map<FolderWithoutBmDto>(bookmark));
+            return Ok(_mapper.Map<BookmarkDto>(bookmark));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<BookmarkDto>> CreateFolder(BookmarkCreateDto model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
+            }
+
+            if (await _bookmarkService.EntityExists(model.FolderId))
+            {
+                return BadRequest("Folder ID mismatch");
+            }
+
+            if (!Uri.IsWellFormedUriString(model.Url, UriKind.Absolute))
+            {
+                return BadRequest($"incorrect url: {model.Url}");
+            }
+
+            Bookmark bookmark = await _bookmarkService.Create(_mapper.Map<Bookmark>(model));
+
+            BookmarkDto bookmarkDto = _mapper.Map<BookmarkDto>(bookmark);
+
+            return CreatedAtAction("GetBookmark", new { id = bookmarkDto.Id }, bookmarkDto);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBookmark(long id)
+        {
+            if (!await _bookmarkService.EntityExists(id))
+            {
+                return NotFound();
+            }
+
+            await _bookmarkService.Delete(id);
+            await _bookmarkService.Save();
+
+            return NoContent();
         }
     }
 }
