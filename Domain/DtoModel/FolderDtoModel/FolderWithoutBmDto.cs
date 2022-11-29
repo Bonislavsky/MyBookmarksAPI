@@ -1,4 +1,4 @@
-﻿namespace MyBookmarksAPI.Domain.DtoModel.FolderDto
+﻿namespace MyBookmarksAPI.Domain.DtoModel.FolderDtoModel
 {
     public class FolderWithoutBmDto
     {

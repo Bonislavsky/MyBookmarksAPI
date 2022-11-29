@@ -4,7 +4,6 @@ using MyBookmarksAPI.Domain.DtoModel.UserDtoModel;
 using MyBookmarksAPI.Domain.Helpers;
 using MyBookmarksAPI.Domain.Helpers.ApiException.UserException;
 using MyBookmarksAPI.Domain.Model;
-using MyBookmarksAPI.Domain.TDOModel;
 using MyBookmarksAPI.Service.Interface;
 using System.Collections.Generic;
 using System.Threading.Tasks;

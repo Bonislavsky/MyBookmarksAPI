@@ -1,4 +1,4 @@
-﻿using MyBookmarksAPI.Domain.DtoModel.FolderDto;
+﻿using MyBookmarksAPI.Domain.DtoModel.FolderDtoModel;
 using System.Collections.Generic;
 
 namespace MyBookmarksAPI.Domain.DtoModel.UserDtoModel

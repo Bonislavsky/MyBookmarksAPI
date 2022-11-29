@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using MyBookmarksAPI.Domain.DtoModel.FolderDto;
+using MyBookmarksAPI.Domain.DtoModel.FolderDtoModel;
 using MyBookmarksAPI.Domain.Model;
 using MyBookmarksAPI.Service.Interface;
 using System.Collections.Generic;
@@ -71,7 +71,7 @@ namespace MyBookmarksAPI.Controllers
 
             if (id != model.Id)
             {
-                return BadRequest("UserID mismatch");
+                return BadRequest("Folder ID mismatch");
             }
 
             Folder folder = await _folderService.GetyById(id);

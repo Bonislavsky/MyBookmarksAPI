@@ -17,8 +17,6 @@ namespace MyBookmarksAPI.Service.Implementation
             _repositoryWrapper = repositoryWrapper; 
         }
 
-        public async Task Delete(long id) => _repositoryWrapper.Bookmark.Delete(await GetyById(id));
-
         public async Task<bool> EntityExists(long id) => await _repositoryWrapper.Bookmark.EntityExists(u => u.Id == id);
 
         public async Task<bool> FolderExists(long folderId) => await _repositoryWrapper.Folder.EntityExists(u => u.Id == folderId);
@@ -31,6 +29,8 @@ namespace MyBookmarksAPI.Service.Implementation
         public async Task<Bookmark> GetyById(long id) => await _repositoryWrapper.Bookmark.GetByCondition(u => u.Id == id);
 
         public async Task Save() => await _repositoryWrapper.SaveAsync();
+
+        public async Task Delete(long id) => _repositoryWrapper.Bookmark.Delete(await GetyById(id));
 
         public void Update(Bookmark model) => _repositoryWrapper.Bookmark.Update(model);
     }
