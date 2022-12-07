@@ -80,11 +80,11 @@ namespace MyBookmarksAPI.Service
             _repositoryWrapper.User.Update(user);
         }
 
-        public async Task<User> LoginUser(UserLoginDto model)
+        public async Task<User> LoginUser(string email, string password)
         {
-            User user = await _repositoryWrapper.User.GetByCondition(u => u.Email.Equals(model.Email));
+            User user = await _repositoryWrapper.User.GetByCondition(u => u.Email.Equals(email));
 
-            if(!HashPasswordSHA512.VerifyHash(model.Password, user.Salt, user.Password))
+            if(!HashPasswordSHA512.VerifyHash(password, user.Salt, user.Password))
             {
                 throw new VerifyPasswordUserException("Не вірний пароль");
             }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyBookmarksAPI.Domain.DtoModel.UserDtoModel;
 using MyBookmarksAPI.Domain.Helpers.ApiException.UserException;
@@ -9,8 +10,9 @@ using System.Threading.Tasks;
 
 namespace MyBookmarksAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
+    [Produces("application/json")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -22,13 +24,24 @@ namespace MyBookmarksAPI.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Get a list of all users
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
         {
             return _mapper.Map<List<UserDto>>(await _userService.GetAll());
         }
 
+        /// <summary>
+        /// Get a User by Id BUT not folders
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <response code="404">If user by id not found</response>
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<UserDto>> GetUser(long id)
         {
             var user = await _userService.GetyById(id);
@@ -40,7 +53,14 @@ namespace MyBookmarksAPI.Controllers
             return _mapper.Map<UserDto>(user);
         }
 
+        /// <summary>
+        /// Get a User by Id with folders
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <response code="404">If user by id not found</response>
         [HttpGet("{id}/WithFolders")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<UserAllDataDto>> GetAllDataUser(long id)
         {
             var user = await _userService.GetAllDataById(id);
@@ -52,7 +72,30 @@ namespace MyBookmarksAPI.Controllers
             return _mapper.Map<UserAllDataDto>(user);
         }
 
+        /// <summary>
+        /// Changing the user's password
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///     
+        ///     id = 1
+        ///     Put
+        ///     {
+        ///           "Id": 1
+        ///           "CurrentPassword": "exemple123",
+        ///           "password": "newexemple",
+        ///           "passwordConfirme": "newexemple"
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        /// <response code="404">If user by id not found</response>
+        /// <response code="400">input error</response> 
         [HttpPut("{id}/ChangePassword")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> EditUserPassword(long id, UserChangePassword model)
         {
             if (!ModelState.IsValid)
@@ -83,7 +126,29 @@ namespace MyBookmarksAPI.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Changing the user's data
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///     
+        ///     id = 1
+        ///     Put
+        ///     {
+        ///           "Id": 1
+        ///           "email": "exemple@gmaol.com",
+        ///           "name": "nameexemple",
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        /// <response code="404">If user by id not found</response>
+        /// <response code="400">input error</response> 
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<UserDto>> EditUser(long id, UserUpdateDto model)
         {
             if (!ModelState.IsValid)
@@ -111,7 +176,29 @@ namespace MyBookmarksAPI.Controllers
             return Ok(_mapper.Map<UserDto>(user));
         }
 
+        /// <summary>
+        /// Creates a User
+        /// </summary>
+        /// <param name="model"></param>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     Post
+        ///     {
+        ///           "email": "Exemple@gmail.com",
+        ///           "password": "exemple123",
+        ///           "passwordConfirme": "exemple123",
+        ///           "name": "Tania"
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns> A new created User</returns>
+        /// <response code="201">Returns the new created User</response>
+        /// <response code="400">If the model is null</response>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<UserDto>> CreateUser(UserCreateDto model)
         {
             if (!ModelState.IsValid)
@@ -121,7 +208,7 @@ namespace MyBookmarksAPI.Controllers
 
             if (await _userService.EntityExists(model.Email))
             {
-                return BadRequest();
+                return NotFound($"User with email {model.Email} not found");
             }
 
             User user = await _userService.Create(model);
@@ -132,22 +219,44 @@ namespace MyBookmarksAPI.Controllers
             return CreatedAtAction(nameof(GetUser), new { id = userDto.Id }, userDto);
         }
 
-        [HttpPost("Login")]
-        public async Task<ActionResult<UserDto>> VerifyUser(UserLoginDto model)
+        /// <summary>
+        /// Login user into a system
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     Get
+        ///     {
+        ///           "email": "Exemple@gmail.com",
+        ///           "password": "exemple123",
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns></returns>
+        /// <response code="200">Successful operation</response>
+        /// <response code="400">Invalid password supplied</response>
+        /// <response code="404">If user by id not found</response>
+        [HttpGet("Login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<UserDto>> VerifyUser(string email, string password)
         {
             if (!ModelState.IsValid)
             {
                 return UnprocessableEntity(ModelState);
             }
 
-            if (!await _userService.EntityExists(model.Email))
+            if (!await _userService.EntityExists(email))
             {
-                return BadRequest();
+                return NotFound($"User with email {email} not found");
             }
 
             try
             {
-                return _mapper.Map<UserDto>(await _userService.LoginUser(model));
+                return Ok(_mapper.Map<UserDto>(await _userService.LoginUser(email, password)));
             }
             catch (VerifyPasswordUserException ex)
             {
@@ -155,12 +264,21 @@ namespace MyBookmarksAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Delete User
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>       
+        /// <response code="404">If user by id not found</response>
+        /// <response code="204">User deleted</response>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> DeleteUser(long id)
         {
             if (!await _userService.EntityExists(id))
             {
-                return NotFound();
+                return NotFound($"User with Id {id} not found");
             }
 
             await _userService.Delete(id);

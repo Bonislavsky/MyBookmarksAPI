@@ -1,12 +1,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using MyBookmarksAPI.DAL;
 using MyBookmarksAPI.DAL.Interface;
@@ -18,9 +15,8 @@ using MyBookmarksAPI.Service;
 using MyBookmarksAPI.Service.Implementation;
 using MyBookmarksAPI.Service.Interface;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IO;
+using System.Reflection;
 
 namespace MyBookmarksAPI
 {
@@ -39,9 +35,23 @@ namespace MyBookmarksAPI
             services.AddDbContext<MyBookmarksDbContext>(options => options.UseSqlServer(connection));
 
             services.AddControllers();
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(options =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyBookmarksAPI", Version = "v1" });
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "MyBookmarksAPI",
+                    Description = "An ASP.NET Core Web API for managing MyBookmark items",
+                    Contact = new OpenApiContact
+                    { 
+                        Name = "Sergey Bonislavsky", 
+                        Email = "bonislavskys@gmail.com", 
+                        Url = new Uri("https://www.linkedin.com/in/sergey-bonislavsky/") 
+                    },
+                });
+
+                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
             });
 
             services.AddControllersWithViews()
