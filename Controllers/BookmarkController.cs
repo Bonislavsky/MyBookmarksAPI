@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyBookmarksAPI.Domain.DtoModel.BookmarkDtoModel;
 using MyBookmarksAPI.Domain.Model;
@@ -22,7 +23,17 @@ namespace MyBookmarksAPI.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Get a list of all bookmark
+        /// </summary>
+        /// <returns></returns>
+        /// <response code="200">Return List bookmarks</response>
+        /// <response code="404">If bookmarks by folderid not found</response>
+        /// <response code="400">Sort parameter not found</response> 
         [HttpGet("folderId:{folderId}/sortBy:{sortParam}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IEnumerable<BookmarkDto>>> GetBookmarks(long folderId, string sortParam = "Id", bool isDec = false)
         {
             if (!await _bookmarkService.FolderExists(folderId))
@@ -38,7 +49,16 @@ namespace MyBookmarksAPI.Controllers
             return Ok(_mapper.Map<List<BookmarkDto>>(await _bookmarkService.GetBookmarkList(folderId, sortParam, isDec ? "DESC" : "ASC")));
         }
 
+        /// <summary>
+        /// Get a Bookmark by id 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <response code="200">Return bookmark</response>
+        /// <response code="404">If bookmarks by id not found</response>
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<BookmarkDto>> GetBookmark(long id)
         {
             var bookmark = await _bookmarkService.GetyById(id);
@@ -50,7 +70,31 @@ namespace MyBookmarksAPI.Controllers
             return Ok(_mapper.Map<BookmarkDto>(bookmark));
         }
 
+        /// <summary>
+        /// Changing the bookmark's data
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///     
+        ///     id = 1
+        ///     Put
+        ///     {
+        ///           "Id": 1,
+        ///           "name": "nameexemple"
+        ///           "url": "https://www.google.com/"
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        /// <response code="200">Folder data updated</response>
+        /// <response code="404">If folder by id not found</response>
+        /// <response code="400">input error</response> 
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BookmarkDto>> EditBookmark(long id, BookmarkUpdateDto model)
         {
             if (!ModelState.IsValid)
@@ -78,7 +122,29 @@ namespace MyBookmarksAPI.Controllers
             return Ok(_mapper.Map<BookmarkDto>(bookmark));
         }
 
+        /// <summary>
+        /// Creates a bookmark
+        /// </summary>
+        /// <param name="model"></param>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     Post
+        ///     {
+        ///           "name": "harry potter",
+        ///           "url": "https://www.google.com/",
+        ///           "folderId": 1
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns> A new created Bookmark</returns>
+        /// <response code="201">Returns the new created bookmark</response>
+        /// <response code="404">If folder by folderId not found</response>
+        /// <response code="400">If url incorrect</response>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<BookmarkDto>> CreateFolder(BookmarkCreateDto model)
         {
             if (!ModelState.IsValid)
@@ -88,7 +154,7 @@ namespace MyBookmarksAPI.Controllers
 
             if (await _bookmarkService.EntityExists(model.FolderId))
             {
-                return BadRequest("Folder ID mismatch");
+                return NotFound("Folder ID mismatch");
             }
 
             if (!Uri.IsWellFormedUriString(model.Url, UriKind.Absolute))
@@ -103,7 +169,16 @@ namespace MyBookmarksAPI.Controllers
             return CreatedAtAction("GetBookmark", new { id = bookmarkDto.Id }, bookmarkDto);
         }
 
+        /// <summary>
+        /// Delete bookmark
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>       
+        /// <response code="404">If bookmark by id not found</response>
+        /// <response code="204">bookmark deleted</response>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> DeleteBookmark(long id)
         {
             if (!await _bookmarkService.EntityExists(id))

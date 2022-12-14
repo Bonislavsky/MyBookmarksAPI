@@ -53,8 +53,11 @@ namespace MyBookmarksAPI.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        /// <response code="200">Return folder</response>
         /// <response code="404">If folder by id not found</response>
         [HttpGet("WithBookmark/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<FolderWithBmDto>> GetFolderWithBookmark(long id)
         {
             var folder = await _folderService.GetAllDataById(id);
@@ -73,6 +76,8 @@ namespace MyBookmarksAPI.Controllers
         /// <returns></returns>
         /// <response code="404">If folder by id not found</response>
         [HttpGet("WithoutBookmark/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<FolderWithoutBmDto>> GetFolderWithoutBookmark(long id)
         {
             var folder = await _folderService.GetyById(id);
