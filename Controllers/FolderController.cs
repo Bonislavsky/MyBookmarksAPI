@@ -74,6 +74,7 @@ namespace MyBookmarksAPI.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        /// <response code="200">Return folder</response>
         /// <response code="404">If folder by id not found</response>
         [HttpGet("WithoutBookmark/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -154,12 +155,12 @@ namespace MyBookmarksAPI.Controllers
         ///     }
         ///
         /// </remarks>
-        /// <returns> A new created User</returns>
+        /// <returns> A new created Folder</returns>
         /// <response code="201">Returns the new created Folder</response>
-        /// <response code="400">If userId was not found</response>
+        /// <response code="404">If userId was not found</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<FolderWithoutBmDto>> CreateFolder(FolderCreateDto model)
         {
             if (!ModelState.IsValid)
@@ -169,7 +170,7 @@ namespace MyBookmarksAPI.Controllers
 
             if (await _folderService.EntityExists(model.UserId))
             {
-                return BadRequest($"User with this id:{model.UserId} was not found");
+                return NotFound($"User with this id:{model.UserId} was not found");
             }
 
             Folder folder = await _folderService.Create(_mapper.Map<Folder>(model));
