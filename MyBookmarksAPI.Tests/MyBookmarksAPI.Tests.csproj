@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BookmarkAPI\MyBookmarksAPI.csproj" />
+    <ProjectReference Include="..\MyBookmarksAPI.Application\MyBookmarksAPI.csproj" />
   </ItemGroup>
 
 </Project>
