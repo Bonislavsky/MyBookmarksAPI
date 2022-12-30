@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyBookmarksAPI", "MyBookmarksAPI.csproj", "{2DA0D936-39AA-4D60-BB0D-65E12C837FA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyBookmarksAPI", "MyBookmarksAPI.Application/MyBookmarksAPI.csproj", "{2DA0D936-39AA-4D60-BB0D-65E12C837FA2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBookmarksAPI.Tests", "MyBookmarksAPI.Tests\MyBookmarksAPI.Tests.csproj", "{FC99145A-4255-4038-901A-942BF8E37641}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{2DA0D936-39AA-4D60-BB0D-65E12C837FA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DA0D936-39AA-4D60-BB0D-65E12C837FA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2DA0D936-39AA-4D60-BB0D-65E12C837FA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC99145A-4255-4038-901A-942BF8E37641}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC99145A-4255-4038-901A-942BF8E37641}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC99145A-4255-4038-901A-942BF8E37641}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC99145A-4255-4038-901A-942BF8E37641}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
