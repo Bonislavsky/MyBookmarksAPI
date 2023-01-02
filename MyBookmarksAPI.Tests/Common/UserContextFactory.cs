@@ -16,7 +16,7 @@ namespace MyBookmarksAPI.Tests.Common
 {
     public class UserContextFactory
     {
-        public static MyBookmarksDbContext GetWideWorldImportersDbContext(string dbName)
+        public static MyBookmarksDbContext Create(string dbName)
         {
             // Create options for DbContext instance
             var options = new DbContextOptionsBuilder<MyBookmarksDbContext>()
