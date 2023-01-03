@@ -1,56 +1,70 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using MyBookmarksAPI.Controllers;
-using MyBookmarksAPI.DAL.Interface;
+using MyBookmarksAPI.DAL;
 using MyBookmarksAPI.DAL.Wrapper;
 using MyBookmarksAPI.Domain.DtoModel.UserDtoModel;
 using MyBookmarksAPI.Domain.Helpers;
 using MyBookmarksAPI.Domain.Helpers.Mapping;
 using MyBookmarksAPI.Domain.Model;
 using MyBookmarksAPI.Service;
-using MyBookmarksAPI.Service.Interface;
 using MyBookmarksAPI.Tests.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace MyBookmarksAPI.Tests.Controller
 {
     public class UserControllerTest
     {
-        private readonly MapperConfiguration _mapConfig = new MapperConfiguration(cfg =>
+        private readonly Mapper _mapper = new Mapper(new MapperConfiguration(cfg =>
         {
             cfg.AddProfile(new AppMappingProfileUser());
             cfg.AddProfile(new AppMappingProfileFolder());
             cfg.AddProfile(new AppMappingProfileBookmark());
-        });
+        }));
+
+        private UserController Arrange(MyBookmarksDbContext dbContext)
+        {
+            var wrapper = new RepositoryWrapper(dbContext);
+            var userService = new UserService(wrapper);
+
+            return new UserController(userService, _mapper);
+        }
 
         [Fact]
         public async Task Get_ListUserAsync_ReturnsAllItems()
         {
             // Arrange
-            using var dbContext = UserContextFactory.Create(nameof(Get_ListUserAsync_ReturnsAllItems));
-
-            var wrapper = new RepositoryWrapper(dbContext);
-            var userService = new UserService(wrapper);
-            var controller = new UserController(userService, new Mapper(_mapConfig));
+            var dbContext = UserContextFactory.Create(nameof(Get_ListUserAsync_ReturnsAllItems));
+            var controller = Arrange(dbContext);
 
             // Act
-            var response = await controller.GetUsers();
+            var OkResult = await controller.GetUsers() as OkObjectResult;
+            var listUser = OkResult.Value as List<UserDto>;
+
+            dbContext.Dispose();
 
             // Assert
-            Assert.IsType<OkObjectResult>(response.Result);
-            var list = response.Result as OkObjectResult;
-            
-            Assert.IsType<List<UserDto>>(list.Value);
-            var listUser = list.Value as List<UserDto>;
-
+            Assert.IsType<List<UserDto>>(listUser);
             Assert.Equal(DataForTest.userList.Count, listUser.Count);
+        }
+
+        [Theory]
+        [InlineData(1, -1, long.MaxValue)]
+        public async Task Get_UserById_ReturnsUser(long id1, long id2, long id3)
+        {
+            // Arrange
+            var dbContext = UserContextFactory.Create(nameof(Get_UserById_ReturnsUser));
+            var controller = Arrange(dbContext);
+
+            // Act
+            var OkResult = await controller.GetUser(id1) as OkObjectResult;
+            var user = OkResult.Value as UserDto;
+
+            dbContext.Dispose();
+
+            // Assert
+            Assert.True(user != null);
+            Assert.Equal(id1, user.Id);          
         }
     }
 }

@@ -31,7 +31,7 @@ namespace MyBookmarksAPI.Controllers
         /// <response code="200">Return List user`s</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
+        public async Task<IActionResult> GetUsers()
         {
             return Ok(_mapper.Map<List<UserDto>>(await _userService.GetAll()));
         }
@@ -44,7 +44,7 @@ namespace MyBookmarksAPI.Controllers
         /// <response code="404">If user by id not found</response>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<UserDto>> GetUser(long id)
+        public async Task<IActionResult> GetUser(long id)
         {
             var user = await _userService.GetyById(id);
             if (user == null)
@@ -52,7 +52,7 @@ namespace MyBookmarksAPI.Controllers
                 return NotFound($"User with Id {id} not found");
             }
 
-            return _mapper.Map<UserDto>(user);
+            return Ok(_mapper.Map<UserDto>(user));
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace MyBookmarksAPI.Controllers
         /// <response code="404">If user by id not found</response>
         [HttpGet("{id}/WithFolders")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<UserAllDataDto>> GetAllDataUser(long id)
+        public async Task<IActionResult> GetAllDataUser(long id)
         {
             var user = await _userService.GetAllDataById(id);
             if (user == null)
@@ -71,7 +71,7 @@ namespace MyBookmarksAPI.Controllers
                 return NotFound($"User with Id {id} not found");
             }
 
-            return _mapper.Map<UserAllDataDto>(user);
+            return Ok(_mapper.Map<UserAllDataDto>(user));
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace MyBookmarksAPI.Controllers
         [HttpPut("{id}/ChangePassword")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> EditUserPassword(long id, UserChangePassword model)
+        public async Task<IActionResult> EditUserPassword(long id, UserChangePassword model)
         {
             if (!ModelState.IsValid)
             {
@@ -153,7 +153,7 @@ namespace MyBookmarksAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<UserDto>> EditUser(long id, UserUpdateDto model)
+        public async Task<IActionResult> EditUser(long id, UserUpdateDto model)
         {
             if (!ModelState.IsValid)
             {
@@ -202,7 +202,7 @@ namespace MyBookmarksAPI.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<UserDto>> CreateUser(UserCreateDto model)
+        public async Task<IActionResult> CreateUser(UserCreateDto model)
         {
             if (!ModelState.IsValid)
             {
@@ -245,7 +245,7 @@ namespace MyBookmarksAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<UserDto>> VerifyUser(string email, string password)
+        public async Task<IActionResult> VerifyUser(string email, string password)
         {
             if (!ModelState.IsValid)
             {
