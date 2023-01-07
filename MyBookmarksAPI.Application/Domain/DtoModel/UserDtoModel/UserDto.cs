@@ -8,7 +8,5 @@ namespace MyBookmarksAPI.Domain.DtoModel.UserDtoModel
         public long Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
-
-        public List<FolderWithoutBmDto> Folders { get; set; }
     }
 }
