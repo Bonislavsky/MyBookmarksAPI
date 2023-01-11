@@ -361,4 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/MyBookmarksAPI.Tests/obj/Debug/net7.0/MyBookmarksAPI.Tests.pdb
+/MyBookmarksAPI.Tests/obj/
+/MyBookmarksAPI.Tests/bin/
