@@ -363,3 +363,8 @@ MigrationBackup/
 FodyWeavers.xsd
 /MyBookmarksAPI.Tests/obj/
 /MyBookmarksAPI.Tests/bin/
+/MyBookmarksAPI.Tests/bin/Debug/net7.0/MyBookmarksAPI.pdb
+/MyBookmarksAPI.Tests/bin/Debug/net7.0/MyBookmarksAPI.dll
+/MyBookmarksAPI.Tests/obj/Debug/net7.0/MyBookmarksAPI.Tests.pdb
+/MyBookmarksAPI.Tests/obj/Debug/net7.0/MyBookmarksAPI.Tests.csproj.AssemblyReference.cache
+/MyBookmarksAPI.Tests/obj/Debug/net7.0/MyBookmarksAPI.Tests.dll
