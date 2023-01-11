@@ -9,33 +9,19 @@ using MyBookmarksAPI.Domain.Helpers.Mapping;
 using MyBookmarksAPI.Domain.Model;
 using MyBookmarksAPI.Service;
 using MyBookmarksAPI.Tests.Common;
+using MyBookmarksAPI.Tests.Helpers;
 using Xunit;
 
 namespace MyBookmarksAPI.Tests.Controllers.User.Queries
 {
     public class GetUserHandlerTest
     {
-        private readonly Mapper _mapper = new Mapper(new MapperConfiguration(cfg =>
-        {
-            cfg.AddProfile(new AppMappingProfileUser());
-            cfg.AddProfile(new AppMappingProfileFolder());
-            cfg.AddProfile(new AppMappingProfileBookmark());
-        }));
-
-        private UserController Arrange(MyBookmarksDbContext dbContext)
-        {
-            var wrapper = new RepositoryWrapper(dbContext);
-            var userService = new UserService(wrapper);
-
-            return new UserController(userService, _mapper);
-        }
-
         [Fact]
         public async Task Get_ListUserAsync_ReturnsAllItems()
         {
             // Arrange
             using var dbContext = UserContextFactory.Create(nameof(Get_ListUserAsync_ReturnsAllItems));
-            var controller = Arrange(dbContext);
+            var controller = GetArrange.Arrange(dbContext);
 
             // Act
             var OkResult = await controller.GetUsers() as OkObjectResult;
@@ -54,7 +40,7 @@ namespace MyBookmarksAPI.Tests.Controllers.User.Queries
         {
             // Arrange
             using var dbContext = UserContextFactory.Create(nameof(Get_UserById_ReturnsUser));
-            var controller = Arrange(dbContext);
+            var controller = GetArrange.Arrange(dbContext);
 
             // Act
             var OkResult = await controller.GetUser(id1) as OkObjectResult;
@@ -80,7 +66,7 @@ namespace MyBookmarksAPI.Tests.Controllers.User.Queries
         {
             // Arrange
             using var dbContext = UserContextFactory.Create(nameof(Get_AllDataUserById_ReturnsUser));
-            var controller = Arrange(dbContext);
+            var controller = GetArrange.Arrange(dbContext);
 
             // Act
             var OkResult = await controller.GetAllDataUser(id1) as OkObjectResult;

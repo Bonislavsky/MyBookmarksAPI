@@ -2,7 +2,7 @@
 using MyBookmarksAPI.Domain.DtoModel.UserDtoModel;
 using MyBookmarksAPI.Domain.Model;
 
-namespace MyBookmarksAPI.Domain.Helpers
+namespace MyBookmarksAPI.Domain.Helpers.Mapping
 {
     public class AppMappingProfileUser: Profile
     {

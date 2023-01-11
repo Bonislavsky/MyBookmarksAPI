@@ -26,8 +26,4 @@
     <ProjectReference Include="..\MyBookmarksAPI.Application\MyBookmarksAPI.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\User\Commands\" />
-  </ItemGroup>
-
 </Project>
